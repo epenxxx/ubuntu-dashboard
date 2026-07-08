@@ -1,0 +1,13 @@
+{
+  "name": "ubuntu-docker-dashboard",
+  "version": "2.0.0",
+  "description": "Premium Dashboard untuk monitoring server Ubuntu dan Docker",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "express-session": "^1.18.0"
+  }
+}

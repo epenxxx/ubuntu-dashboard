@@ -1,0 +1,241 @@
+<!DOCTYPE html><html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Dashboard | Orion Core</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #0B1121; color: #f1f5f9; }
+        .card { background-color: #151f32; border: 1px solid rgba(51,65,85,0.5); }
+        .tab-btn.active { color: #22d3ee; border-bottom: 2px solid #22d3ee; background: rgba(34,211,238,0.05); }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0B1121; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+    </style>
+</head>
+<body class="min-h-screen font-sans pb-12">
+    <nav class="bg-[#151f32]/80 backdrop-blur-md border-b border-slate-700/50 px-6 py-4 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <span class="p-2 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.2)]"><i class="fa-brands fa-ubuntu text-xl"></i></span>
+                <div>
+                    <h1 class="font-bold text-white tracking-wide">Orion Analytics</h1>
+                    <p class="text-[10px] text-cyan-500 uppercase tracking-widest font-mono">Core Dashboard</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold flex items-center gap-2 shadow-[0_0_10px_rgba(16,185,129,0.2)]"><div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div> ONLINE</div>
+                <a href="/logout" class="p-2 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 transition"><i class="fa-solid fa-power-off"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto p-4 sm:p-6 space-y-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div class="card p-5 rounded-2xl relative overflow-hidden group">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 to-blue-500"></div>
+                <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-400 uppercase tracking-wider">CPU Usage</span><i class="fa-solid fa-microchip text-cyan-500/50 text-xl"></i></div>
+                <div id="stat-cpu" class="text-2xl font-bold font-mono text-cyan-400 mt-2">-- %</div>
+            </div>
+            <div class="card p-5 rounded-2xl relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-fuchsia-500 to-purple-600"></div>
+                <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-400 uppercase tracking-wider">RAM Usage</span><i class="fa-solid fa-memory text-fuchsia-500/50 text-xl"></i></div>
+                <div class="w-full bg-[#0B1121] rounded-full h-2 mt-3"><div id="stat-mem-bar" class="bg-gradient-to-r from-fuchsia-500 to-purple-500 h-full rounded-full transition-all" style="width: 0%"></div></div>
+                <div id="stat-mem-text" class="text-xs text-right font-mono text-slate-400 mt-2">-- / -- MB</div>
+            </div>
+            <div class="card p-5 rounded-2xl relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 to-teal-500"></div>
+                <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-400 uppercase tracking-wider">SSD (Root)</span><i class="fa-solid fa-hard-drive text-emerald-500/50 text-xl"></i></div>
+                <div class="w-full bg-[#0B1121] rounded-full h-2 mt-3"><div id="stat-ssd-bar" class="bg-gradient-to-r from-emerald-400 to-teal-500 h-full rounded-full transition-all" style="width: 0%"></div></div>
+                <div id="stat-ssd-text" class="text-xs text-right font-mono text-slate-400 mt-2">Membaca data...</div>
+            </div>
+            <div class="card p-5 rounded-2xl relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-400 to-orange-500"></div>
+                <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-400 uppercase tracking-wider">HDD (/mnt/HDD)</span><i class="fa-solid fa-database text-amber-500/50 text-xl"></i></div>
+                <div class="w-full bg-[#0B1121] rounded-full h-2 mt-3"><div id="stat-hdd-bar" class="bg-gradient-to-r from-amber-400 to-orange-500 h-full rounded-full transition-all" style="width: 0%"></div></div>
+                <div id="stat-hdd-text" class="text-xs text-right font-mono text-slate-400 mt-2">Membaca data...</div>
+            </div>
+            <div class="card p-5 rounded-2xl relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rose-400 to-red-500"></div>
+                <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-400 uppercase tracking-wider">System Uptime</span><i class="fa-solid fa-clock text-rose-500/50 text-xl"></i></div>
+                <div id="stat-uptime" class="text-xl font-bold font-mono text-slate-200 mt-2">--</div>
+            </div>
+            <div class="card p-5 rounded-2xl relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-400 to-blue-500"></div>
+                <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-400 uppercase tracking-wider">OS Info</span><i class="fa-brands fa-linux text-indigo-500/50 text-xl"></i></div>
+                <div id="stat-os" class="text-sm font-bold font-mono text-slate-200 mt-2 truncate">--</div>
+            </div>
+        </div>
+
+        <div id="toast" class="hidden fixed bottom-6 right-6 bg-[#151f32] border border-cyan-500/30 text-white px-5 py-4 rounded-xl shadow-[0_0_20px_rgba(34,211,238,0.2)] z-50 flex items-center gap-3"><span id="toast-icon"></span><span id="toast-msg" class="text-sm font-medium">Notification</span></div>
+
+        <div class="card rounded-2xl overflow-hidden shadow-xl">
+            <div class="flex border-b border-slate-700/50 bg-[#0B1121] px-2 overflow-x-auto">
+                <button onclick="switchTab('systemd')" id="tab-systemd" class="tab-btn active px-6 py-4 font-bold text-sm transition"><i class="fa-solid fa-gears mr-2"></i>Systemd</button>
+                <button onclick="switchTab('docker')" id="tab-docker" class="tab-btn px-6 py-4 font-bold text-sm text-slate-400 transition"><i class="fa-brands fa-docker mr-2"></i>Docker</button>
+                <button onclick="switchTab('ports')" id="tab-ports" class="tab-btn px-6 py-4 font-bold text-sm text-slate-400 transition"><i class="fa-solid fa-network-wired mr-2"></i>Ports</button>
+                <button onclick="switchTab('github')" id="tab-github" class="tab-btn px-6 py-4 font-bold text-sm text-slate-400 transition"><i class="fa-brands fa-github mr-2"></i>Git Exporter</button>
+            </div>
+
+            <div id="content-systemd" class="p-6">
+                <div class="flex gap-4 mb-4"><input type="text" onkeyup="filterTable('systemd-tbody', this.value)" placeholder="Cari service..." class="w-full bg-[#0B1121] border border-slate-700 rounded-xl px-4 py-2 text-white text-sm focus:border-cyan-400 focus:outline-none"><button onclick="fetchSystemd()" class="bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 hover:bg-cyan-500/20 px-4 rounded-xl font-bold text-sm transition"><i class="fa-solid fa-rotate"></i></button></div>
+                <div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead class="text-slate-400 border-b border-slate-700/50"><tr><th class="pb-3">Service</th><th class="pb-3">Status</th><th class="pb-3">Sub</th><th class="pb-3 text-right">Aksi</th></tr></thead><tbody id="systemd-tbody"></tbody></table></div>
+            </div>
+
+            <div id="content-docker" class="p-6 hidden">
+                <div class="flex gap-4 mb-4"><input type="text" onkeyup="filterTable('docker-tbody', this.value)" placeholder="Cari container..." class="w-full bg-[#0B1121] border border-slate-700 rounded-xl px-4 py-2 text-white text-sm focus:border-cyan-400 focus:outline-none"><button onclick="fetchDocker()" class="bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 hover:bg-cyan-500/20 px-4 rounded-xl font-bold text-sm transition"><i class="fa-solid fa-rotate"></i></button></div>
+                <div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead class="text-slate-400 border-b border-slate-700/50"><tr><th class="pb-3">Container</th><th class="pb-3">Image</th><th class="pb-3">Ports</th><th class="pb-3">State</th><th class="pb-3 text-right">Aksi</th></tr></thead><tbody id="docker-tbody"></tbody></table></div>
+            </div>
+
+            <div id="content-ports" class="p-6 hidden">
+                <div class="flex gap-4 mb-4"><input type="text" onkeyup="filterTable('ports-tbody', this.value)" placeholder="Cari port..." class="w-full bg-[#0B1121] border border-slate-700 rounded-xl px-4 py-2 text-white text-sm focus:border-cyan-400 focus:outline-none"><button onclick="fetchPorts()" class="bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 hover:bg-cyan-500/20 px-4 rounded-xl font-bold text-sm transition"><i class="fa-solid fa-rotate"></i></button></div>
+                <div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead class="text-slate-400 border-b border-slate-700/50"><tr><th class="pb-3">Port</th><th class="pb-3">Proto</th><th class="pb-3">Address</th><th class="pb-3">Process</th></tr></thead><tbody id="ports-tbody"></tbody></table></div>
+            </div>
+
+            <div id="content-github" class="p-6 hidden">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                    <div><label class="block text-xs font-bold text-slate-400 mb-2">Folder Host</label><input type="text" id="git-path" class="w-full bg-[#0B1121] border border-slate-700 text-white rounded-xl px-4 py-2 text-sm" placeholder="/home/zylve/proyek"></div>
+                    <div><label class="block text-xs font-bold text-slate-400 mb-2">Repo URL</label><input type="text" id="git-url" class="w-full bg-[#0B1121] border border-slate-700 text-white rounded-xl px-4 py-2 text-sm" placeholder="https://github.com/user/repo.git"></div>
+                    <div><label class="block text-xs font-bold text-slate-400 mb-2">Username</label><input type="text" id="git-user" class="w-full bg-[#0B1121] border border-slate-700 text-white rounded-xl px-4 py-2 text-sm" placeholder="Username"></div>
+                    <div><label class="block text-xs font-bold text-slate-400 mb-2">PAT Token</label><input type="password" id="git-token" class="w-full bg-[#0B1121] border border-slate-700 text-white rounded-xl px-4 py-2 text-sm" placeholder="ghp_xxx"></div>
+                </div>
+                <button onclick="submitGit()" id="btn-git" class="px-5 py-2.5 bg-gradient-to-r from-violet-500 to-fuchsia-600 hover:from-violet-400 hover:to-fuchsia-500 font-bold text-white rounded-xl text-sm transition flex items-center gap-2 shadow-[0_0_15px_rgba(168,85,247,0.4)]"><i class="fa-solid fa-upload"></i> Jalankan Git Push</button>
+                <pre id="git-log" class="mt-4 bg-[#0B1121] p-4 rounded-xl text-xs text-slate-400 border border-slate-700 font-mono overflow-auto max-h-48 border-l-2 border-l-fuchsia-500">Terminal Ready...</pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(t) {
+            ['systemd','docker','ports','github'].forEach(x => {
+                document.getElementById('content-'+x).classList.add('hidden');
+                document.getElementById('tab-'+x).className = 'tab-btn px-6 py-4 font-bold text-sm text-slate-400 transition';
+            });
+            document.getElementById('content-'+t).classList.remove('hidden');
+            document.getElementById('tab-'+t).className = 'tab-btn active px-6 py-4 font-bold text-sm transition';
+            if(t==='systemd') fetchSystemd(); if(t==='docker') fetchDocker(); if(t==='ports') fetchPorts();
+        }
+        function filterTable(id, q) { document.querySelectorAll(`#${id} tr`).forEach(tr => tr.style.display = tr.innerText.toLowerCase().includes(q.toLowerCase()) ? '' : 'none'); }
+        function showToast(msg, isSuccess = true) {
+            const b = document.getElementById('toast'), i = document.getElementById('toast-icon');
+            document.getElementById('toast-msg').innerText = msg;
+            i.innerHTML = isSuccess ? '<i class="fa-solid fa-check-circle text-emerald-400 text-xl"></i>' : '<i class="fa-solid fa-triangle-exclamation text-rose-400 text-xl"></i>';
+            b.classList.remove('hidden'); setTimeout(() => b.classList.add('hidden'), 3000);
+        }
+
+        async function fetchStats() {
+            try {
+                const res = await fetch('/api/stats');
+                if(res.status === 401) return window.location.href = '/login';
+                const d = await res.json();
+                
+                if (d.cpuUsage) {
+                    const c = document.getElementById('stat-cpu'); c.innerText = d.cpuUsage + ' %';
+                    c.className = d.cpuUsage > 80 ? 'text-2xl font-bold font-mono text-rose-400 drop-shadow-[0_0_8px_rgba(251,113,133,0.8)] mt-2' : 'text-2xl font-bold font-mono text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)] mt-2';
+                }
+                if (d.memory) {
+                    document.getElementById('stat-mem-bar').style.width = d.memory.percentage + '%';
+                    document.getElementById('stat-mem-text').innerText = `${d.memory.used} / ${d.memory.total} MB (${d.memory.percentage}%)`;
+                }
+                if (d.storage?.ssd) {
+                    document.getElementById('stat-ssd-bar').style.width = d.storage.ssd.percentage + '%';
+                    document.getElementById('stat-ssd-text').innerText = `${d.storage.ssd.used} / ${d.storage.ssd.total} GB (${d.storage.ssd.percentage}%)`;
+                } else { document.getElementById('stat-ssd-text').innerText = 'Tidak Ditemukan'; }
+                
+                if (d.storage?.hdd) {
+                    document.getElementById('stat-hdd-bar').style.width = d.storage.hdd.percentage + '%';
+                    document.getElementById('stat-hdd-text').innerText = `${d.storage.hdd.used} / ${d.storage.hdd.total} GB (${d.storage.hdd.percentage}%)`;
+                } else { document.getElementById('stat-hdd-text').innerText = 'Tidak Ditemukan'; }
+                
+                document.getElementById('stat-uptime').innerText = d.uptime ? `${Math.floor(d.uptime/86400)}d ${Math.floor(d.uptime%86400/3600)}h` : '--';
+                document.getElementById('stat-os').innerText = d.platform + ' ' + d.release;
+            } catch(e) {}
+        }
+
+        async function fetchSystemd() {
+            try {
+                const b = document.getElementById('systemd-tbody'); b.innerHTML = '<tr><td colspan="4" class="text-center p-6 text-cyan-400">Memuat data...</td></tr>';
+                const res = await fetch('/api/systemd'); const d = await res.json(); b.innerHTML = '';
+                if(d.error) { b.innerHTML = `<tr><td colspan="4" class="text-center p-4 text-rose-400">${d.error}</td></tr>`; return; }
+                d.forEach(s => {
+                    const ok = s.active === 'active';
+                    b.innerHTML += `
+                        <tr class="border-b border-slate-800/50 hover:bg-[#0B1121] transition">
+                            <td class="py-3 font-semibold text-slate-200">${s.name}</td>
+                            <td class="py-3"><span class="px-3 py-1 rounded-full text-[10px] uppercase font-bold border ${ok ? 'text-emerald-400 border-emerald-400/30 bg-emerald-400/10' : 'text-rose-400 border-rose-400/30 bg-rose-400/10'}">${s.active}</span></td>
+                            <td class="py-3 font-mono text-xs text-slate-400">${s.sub}</td>
+                            <td class="py-3 text-right">
+                                <button onclick="doAction('systemd','start','${s.name}')" class="px-3 py-1 bg-emerald-500/10 text-emerald-400 rounded hover:bg-emerald-500/20"><i class="fa-solid fa-play"></i></button>
+                                <button onclick="doAction('systemd','stop','${s.name}')" class="px-3 py-1 bg-rose-500/10 text-rose-400 rounded hover:bg-rose-500/20 mx-1"><i class="fa-solid fa-stop"></i></button>
+                                <button onclick="doAction('systemd','restart','${s.name}')" class="px-3 py-1 bg-cyan-500/10 text-cyan-400 rounded hover:bg-cyan-500/20"><i class="fa-solid fa-rotate-right"></i></button>
+                            </td>
+                        </tr>`;
+                });
+            } catch(e) {}
+        }
+
+        async function fetchDocker() {
+            try {
+                const b = document.getElementById('docker-tbody'); b.innerHTML = '<tr><td colspan="5" class="text-center p-6 text-cyan-400">Memuat container...</td></tr>';
+                const res = await fetch('/api/docker'); const d = await res.json(); b.innerHTML = '';
+                if(d.error) { b.innerHTML = `<tr><td colspan="5" class="text-center p-4 text-rose-400">${d.error}</td></tr>`; return; }
+                if(!d.length) { b.innerHTML = `<tr><td colspan="5" class="text-center p-4 text-slate-500">Tidak ada container</td></tr>`; return; }
+                d.forEach(c => {
+                    const ok = c.state === 'running';
+                    b.innerHTML += `
+                        <tr class="border-b border-slate-800/50 hover:bg-[#0B1121] transition">
+                            <td class="py-3 font-semibold text-slate-200">${c.name}</td>
+                            <td class="py-3 text-xs font-mono text-slate-400 max-w-[120px] truncate">${c.image}</td>
+                            <td class="py-3 text-xs font-mono text-amber-400 max-w-[120px] truncate">${c.ports || '-'}</td>
+                            <td class="py-3"><span class="px-3 py-1 rounded-full text-[10px] uppercase font-bold border ${ok ? 'text-emerald-400 border-emerald-400/30 bg-emerald-400/10' : 'text-slate-400 border-slate-500/30 bg-slate-800'}">${c.state}</span></td>
+                            <td class="py-3 text-right">
+                                ${!ok ? `<button onclick="doAction('docker','start','${c.name}')" class="px-3 py-1 bg-emerald-500/10 text-emerald-400 rounded hover:bg-emerald-500/20"><i class="fa-solid fa-play"></i></button>` : ''}
+                                ${ok ? `<button onclick="doAction('docker','stop','${c.name}')" class="px-3 py-1 bg-amber-500/10 text-amber-400 rounded hover:bg-amber-500/20"><i class="fa-solid fa-stop"></i></button>` : ''}
+                                <button onclick="doAction('docker','restart','${c.name}')" class="px-3 py-1 bg-cyan-500/10 text-cyan-400 rounded hover:bg-cyan-500/20 ml-1"><i class="fa-solid fa-rotate-right"></i></button>
+                            </td>
+                        </tr>`;
+                });
+            } catch(e) {}
+        }
+
+        async function fetchPorts() {
+            try {
+                const b = document.getElementById('ports-tbody'); b.innerHTML = '<tr><td colspan="4" class="text-center p-6 text-cyan-400">Melacak port...</td></tr>';
+                const res = await fetch('/api/ports'); const d = await res.json(); b.innerHTML = '';
+                if(d.error) { b.innerHTML = `<tr><td colspan="4" class="text-center p-4 text-rose-400">${d.error}</td></tr>`; return; }
+                d.forEach(p => {
+                    b.innerHTML += `
+                        <tr class="border-b border-slate-800/50 hover:bg-[#0B1121] transition">
+                            <td class="py-3 font-bold text-amber-400 font-mono text-base">${p.port}</td>
+                            <td class="py-3"><span class="px-2 py-0.5 rounded text-[10px] bg-slate-800 text-slate-300 uppercase">${p.proto}</span></td>
+                            <td class="py-3 text-xs font-mono text-slate-400">${p.address}</td>
+                            <td class="py-3 text-sm text-slate-200"><i class="fa-solid fa-microchip text-slate-500 mr-2"></i>${p.process}</td>
+                        </tr>`;
+                });
+            } catch(e) {}
+        }
+
+        async function doAction(t, a, n) {
+            if(!confirm(`Jalankan ${a} pada ${n}?`)) return;
+            showToast(`Memproses ${a}...`);
+            const res = await fetch(`/api/${t}/${a}/${n}`, { method: 'POST' });
+            const d = await res.json();
+            showToast(d.message || d.error || 'Selesai', d.success);
+            setTimeout(() => t === 'systemd' ? fetchSystemd() : fetchDocker(), 1000);
+        }
+
+        async function submitGit() {
+            const body = { path: document.getElementById('git-path').value, url: document.getElementById('git-url').value, user: document.getElementById('git-user').value, token: document.getElementById('git-token').value };
+            if(!body.path || !body.url || !body.user || !body.token) return alert('Lengkapi semua kolom!');
+            document.getElementById('git-log').innerText = 'Memproses unggahan... mohon tunggu.';
+            document.getElementById('btn-git').disabled = true;
+            try {
+                const res = await fetch('/api/git/upload', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body) });
+                const d = await res.json();
+                document.getElementById('git-log').innerText = d.success ? '✅ SUKSES:\n' + d.log : '❌ GAGAL:\n' + d.log;
+            } catch(e) { document.getElementById('git-log').innerText = 'Error koneksi API.'; }
+            document.getElementById('btn-git').disabled = false;
+        }
+
+        fetchStats(); fetchSystemd(); setInterval(fetchStats, 3000);
+    </script>
+</body></html>

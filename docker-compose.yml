@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  dashboard:
+    build: .
+    container_name: server-dashboard
+    restart: unless-stopped
+    privileged: true
+    pid: "host"
+    network_mode: "host"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - ADMIN_USER=zylve
+      - ADMIN_PASS=26082014
+      - SESSION_SECRET=zylve_premium_cyber_secret_2026
